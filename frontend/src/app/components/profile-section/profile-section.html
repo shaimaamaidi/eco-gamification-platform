@@ -1,0 +1,69 @@
+<div *ngIf="!isLoadingData; else loading" class="w-full p-2 space-y-6">
+  <!-- Section profil -->
+  <div class="card-content grid gap-6">
+    <div class="flex flex-col bg-white gap-6 p-4 w-full border border-gray-200 rounded-2xl shadow-inner">
+      <!-- Avatar et infos -->
+      <div class="flex flex-col items-center gap-4">
+        <div class="relative">
+          <div class="avatar h-32 w-32 bg-gradient-to-br from-emerald-400 to-teal-500 border-4 border-green-200 flex items-center justify-center text-4xl font-bold text-gray-500 rounded-full overflow-hidden">
+            {{ name[0] }}
+          </div>
+        </div>
+        <h2 class="text-2xl font-bold">{{ name }}</h2>
+        <p class="text-gray-500">{{ currentUser? currentUser.mail : "mail@gmail.com" }}</p>
+        <div *ngIf="!isAdmin" class="grid grid-cols-2 items-center gap-2">
+          <img src="/assets/coins.svg"/>
+          <p  class="text-lg font-semibold">{{ currentUser? currentUser.totalPoints : 0 }}</p>
+        </div>
+      </div>
+
+      <div class="grid gap-4">
+        <div class="grid gap-2">
+          <label for="name">Nom & Prénom</label>
+          <input id="name" type="text" [readonly]="isAdmin" [(ngModel)]="name" autocomplete="off" class="input text-gray-500"/>
+        </div>
+      </div>
+
+      <div *ngIf="!isAdmin" class="grid gap-4">
+        <div class="grid gap-2">
+          <label for="city">Ville</label>
+          <input id="city" type="text" [(ngModel)]="city" autocomplete="off" class="input text-gray-500"/>
+        </div>
+      </div>
+
+      <!-- Bouton -->
+      <div *ngIf="!isAdmin"  class="pt-4 border-t">
+        <button (click)="saveChanges()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold h-12 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="!isLoading">Enregistrer les modifications</span>
+          <div *ngIf="isLoading" class="flex text-center items-center justify-center">
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+            Modification en cours...
+          </div>
+        </button>
+        <p class="text-sm text-gray-500 mt-1">
+          Vous pouvez modifier vos informations et enregistrer les changements ci-dessus.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section paramètres -->
+    <div class="bg-white flex flex-col gap-6 p-4 border border-gray-200 rounded-2xl shadow-inner">
+      <h3 class="text-lg font-semibold">Paramètres du compte</h3>
+      <div class="grid gap-2 border p-4 rounded-md">
+        <label for="password-change">Modifier le mot de passe</label>
+        <p class="text-sm text-gray-500">
+          Vous serez redirigé vers une page sécurisée pour le changement.
+        </p>
+        <button id="password-change" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold h-12 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+          (click)="changePassword()">
+          Changer le mot de passe
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

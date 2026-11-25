@@ -1,0 +1,104 @@
+<div *ngIf="!isLoadingData; else loading" class="w-full h-full p-4 gap-6 flex flex-col"> 
+  <!-- Bloc 1 : Titre + filtres -->
+  <div class="card bg-white rounded-lg shadow p-4 shadow-lg h-full">
+    <header class="flex items-center justify-between mb-4">
+      <h2 class="flex items-center gap-2 text-xl font-semibold">
+        <img src="/assets/people.svg" class="h-5 w-5 text-primary" />
+        Classement
+      </h2>
+    </header>
+
+    <div class="relative w-full flex gap-4 grid grid-rows-2 transition-all duration-300 ease-in-out"
+        [ngClass]="(rankingType === 'by_Action' || rankingType === 'by_City') ? 'h-20' : 'h-12'">
+      <!-- Select principal -->
+      <div> 
+        <select
+          class="border border-emerald-600 rounded px-3 py-1 cursor-pointer text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 transition-all duration-200"
+          [value]="rankingType"
+          (change)="onRankingTypeChange($event)"
+        >
+          <option value="global" class="bg-white text-black">Global</option>
+          <option value="by_Action" class="bg-white text-black">Par Action</option>
+          <option value="by_City" class="bg-white text-black">Par Ville</option>
+        </select>
+      </div>
+
+      <!-- Select action type ou input ville -->
+      <div class="grid grid-col-2">
+        <select
+          *ngIf="rankingType === 'by_Action'"
+          class="w-64 border border-emerald-600 rounded px-3 py-1 cursor-pointer text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 transition-all duration-200"
+          [(ngModel)]="selectedActionType"
+          (ngModelChange)="updateDisplayedData()"
+        > 
+          <option value="tous" class="bg-white text-black">Tous les types d'action</option>
+          <option value="tri" class="bg-white text-black">Tri</option>
+          <option value="recyclage" class="bg-white text-black">Recyclage</option>
+          <option value="compostage" class="bg-white text-black">Compostage</option>
+          <option value="nettoyage" class="bg-white text-black">Nettoyage</option>
+          <option value="plantation" class="bg-white text-black">Plantation</option>
+        </select>
+
+        <input
+          *ngIf="rankingType === 'by_City'"
+          type="text"
+          placeholder="Entrer une ville"
+          [(ngModel)]="selectedCity"
+          (ngModelChange)="updateDisplayedData()"
+          class="w-64 border border-emerald-600 rounded px-3 py-1 text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bloc 2 : Recherche + résultats -->
+  <div class="card bg-white rounded-lg shadow p-4 shadow-lg h-full">
+    <!-- Recherche nom -->
+    <div class="relative flex justify-end w-full h-12 mb-4">
+      <input
+        type="text"
+        placeholder="Rechercher un client"
+        [(ngModel)]="searchTerm"
+        class="pr-10 pl-4 h-full w-full max-w-md border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+      />
+      <img src="/assets/user-search.svg" class="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-6 pointer-events-none"/>
+    </div>
+
+    <!-- Liste -->
+    <ng-container *ngIf="clients.length > 0; else noClients">
+      <div *ngIf="filteredRankings.length > 0" class="card bg-white p-4 h-full">
+        <div #scrollContainer class="overflow-auto max-h-80 pr-4">
+          <div class="grid gap-2"> 
+            <app-ranking-item
+              *ngFor="let client of filteredRankings"
+              [client]="client"
+              (click)="onClientClick(client.id)"
+              #rankingItems
+            ></app-ranking-item>
+          </div>
+        </div> 
+      </div>
+    </ng-container>
+    <ng-template #noClients>
+      <div class="flex justify-center items-center h-64 bg-white rounded-2xl shadow-lg text-gray-500 font-medium">
+        Pas de client pour l'instant
+      </div>
+    </ng-template>
+
+    <!-- Pas de résultat -->
+    <div *ngIf="filteredRankings.length === 0 && clients.length > 0"
+      class="flex items-center justify-center gap-4 bg-white p-4 h-24 text-[rgb(255,0,0)]">
+      <img src="/assets/search-x.svg" class="h-6 w-6" />
+      <p class="text-lg font-semibold">Pas de client avec le filtre choisi</p>
+    </div>
+  </div>
+  <app-client-details
+    *ngIf="selectedClient"
+    [client]="selectedClient"
+    (click)="onCloseDetails()">
+  </app-client-details> 
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

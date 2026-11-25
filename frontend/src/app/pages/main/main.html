@@ -1,0 +1,50 @@
+<div *ngIf="!isLoadingData; else loading" class="bg-[#DCFCE7] relative min-h-screen">
+  <!-- Sidebar -->
+  <app-side-bar
+    [isAdmin]="isAdmin"
+    [isExpanded]="isSidebarExpanded"
+    [menuItems]="menuItems"
+    (openSidebar)="openSidebar()"
+    (closeSidebar)="closeSidebar()"
+    (sectionChange)="setCurrentSection($event)"
+    class="fixed top-0 left-0 z-20 h-full transition-width duration-300">
+  </app-side-bar>
+
+  <div 
+    *ngIf="isSidebarExpanded && isMobile"
+    (click)="closeSidebar()"
+    class="fixed inset-0 bg-black bg-opacity-40 z-10">
+  </div>
+
+  <main  class="overflow-hidden ml-0 w-full relative z-0 transition-all duration-300" [ngClass]="{'pl-[85px]':!isMobile && !isSidebarExpanded,'pl-[255px]':!isMobile && isSidebarExpanded}">
+    <div class="bg-[#DCFCE7] w-full flex items-center justify-between p-4 border-b sticky top-0 z-10">
+      <!-- Titre -->
+      <div class="grid grid-rows-2 gap-2">
+        <h1 class="text-xl font-semibold text-gray-800">
+          {{ currentSection.title }}
+        </h1> 
+        <p class="text-gray-600 text-sm">
+          {{ currentSection.label }}
+        </p>
+      </div>
+
+      <!-- Actions à droite -->
+      <div class="flex items-center gap-4">
+        <!-- Notification --> 
+        <app-notification></app-notification>
+        <!-- Logout -->
+        <button 
+          (click)="logout()"
+          class="relative p-2 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all">
+          <img src="/assets/log-out.svg" class="w-5 h-5" alt="Se déconnecter"/>
+        </button>
+      </div>
+    </div>
+    <router-outlet></router-outlet>
+  </main>
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

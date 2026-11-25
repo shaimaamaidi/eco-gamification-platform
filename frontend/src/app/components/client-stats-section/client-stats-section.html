@@ -1,0 +1,130 @@
+<div *ngIf="!isLoadingAll; else loading" class="bg-[#DCFCE7] relative flex-1 p-2 space-y-6  overflow-x-hidden min-h-screen transition-all duration-300">
+  <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6">
+    
+    <!-- Colonne principale -->
+    <div class="grid grid-rows-[auto_auto] gap-6">
+      
+      <!-- Cartes : Total + Actifs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <!-- Total Clients -->
+        <div class="p-4 rounded-2xl shadow-lg bg-gradient-to-r from-purple-400 to-purple-500">
+          <div class="flex justify-between items-center pb-2">
+            <div class="text-lg  font-medium">Total Clients</div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <div class="text-5xl font-light">{{ totalClients | number }}</div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-3 text-sm gap-2">
+            <div>
+              <div class="font-light">{{ nbreEnabledClient | number }}</div>
+              <div class="text-black text-xs">Clients vérifiés</div>
+            </div>
+            <div>
+              <div class="font-light">+{{ newClientsAbsolute | number }}</div>
+              <div class="text-black text-xs">Nouveaux</div>
+            </div>
+            <div>
+              <div class="flex items-center gap-1 font-light" [ngClass]="newClientsChange >= 0 ? 'text-green-800' : 'text-red-600'">
+                <span>{{ newClientsChange | number:'1.1-1' }}%</span>
+                <img *ngIf="newClientsChange >= 0" src="/assets/move-up.svg" class="w-4 h-4"/>
+                <img *ngIf="newClientsChange < 0" src="/assets/move-down.svg" class="w-4 h-4"/>
+              </div>
+              <div class="text-black text-xs">vs Hier</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clients Actifs -->
+        <div class="p-4 rounded-2xl shadow-lg bg-gradient-to-r from-blue-400 to-blue-500">
+          <div class="flex justify-between items-center pb-2">
+            <div class="text-lg font-medium">Clients Actifs (7 jours)</div>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="text-5xl font-light">{{ activeClientsLast7Days | number }}</div>
+          </div>
+          <div class="mt-4 grid grid-cols-2 text-sm">
+            <div>
+              <div class="font-light">~{{ (activeClientsLast7Days / 7) | number }}</div>
+              <div class="text-black text-xs">Moy. par jour</div>
+            </div>
+            <div>
+              <div class="font-light" [ngClass]="newClientsChange >= 0 ? 'text-green-900' : 'text-red-600'">
+                {{ totalClients !== 0 
+                ? (((activeClientsLast7Days / totalClients) * 100) | number:'1.1-1')
+                : 0 }}%
+              </div>
+              <div class="text-black text-xs">du total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graphique évolutif -->
+      <div class="p-4 rounded-2xl shadow-lg overflow-x-auto bg-white">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
+          <h2 class="text-lg font-medium">Évolution total des Clients</h2>
+          <div class="flex gap-2 items-center">
+            <button *ngIf="selectedPeriod==='jour' " [disabled]="!goback" (click)="previousWeek()" class="px-2 py-1 bg-white rounded hover:bg-emerald-600/10 disabled:opacity-50 disabled:cursor-not-allowed">
+              <img  src="/assets/chevrons-left.svg" class="w-5 h-5"/>
+            </button>
+            <button *ngIf="selectedPeriod==='jour'" [disabled]="!gonext" (click)="nextWeek()" class="px-2 py-1 bg-white rounded hover:bg-emerald-600/10 disabled:opacity-50 disabled:cursor-not-allowed">
+              <img  src="/assets/chevrons-right.svg" class="w-5 h-5"/>
+            </button>
+            <label for="periode" class="text-sm">Période :</label>
+            <select id="periode" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()"
+              class="border border-emerald-600 rounded px-3 py-1 cursor-pointer text-emerald-600 bg-emerald-600/10">
+              <option value="jour">Jour</option>
+              <option value="mois">Mois</option>
+              <option value="annee">Année</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <div style="max-width: 700px;">
+            <ngx-charts-line-chart
+              [results]="results"
+              [legend]="true"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showXAxisLabel]="false"
+              [showYAxisLabel]="false"
+              [view]="[700, 300]"
+              [tooltipDisabled]="false"
+              [animations]="true">
+            </ngx-charts-line-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Camembert + légende -->
+     <div class="rounded-2xl shadow-lg flex flex-col items-center p-4 bg-white">
+      <h2 class="text-lg font-medium mb-4">Répartition des clients</h2>
+
+      <ngx-charts-pie-chart
+        [results]="clientDistributionData"
+        [legend]="false"
+        [doughnut]="true"
+        [view]="[300, 300]"
+        [tooltipDisabled]="false"
+        [animations]="true"
+        [customColors]="customClientColors">
+      </ngx-charts-pie-chart>
+
+      <div class="flex flex-wrap justify-center gap-4 w-full max-w-[500px] mt-10 p-4">
+        <div *ngFor="let item of customClientColors" class="flex items-center space-x-2">
+          <span class="w-4 h-4 rounded" [style.background-color]="item.value"></span>
+          <span>{{ item.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ <ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

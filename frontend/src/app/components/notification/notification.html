@@ -1,0 +1,49 @@
+<div class="relative">
+  <!-- Bouton notifications -->
+  <button
+    (click)="toggleNotifications()"
+    class="relative p-2 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all">
+    <img src="/assets/notification.svg" class="w-5 h-5"/>
+    <span
+      *ngIf="unreadCount > 0"
+      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+      {{ unreadCount }}
+    </span>
+  </button>
+
+  <!-- Panel notifications -->
+  <div
+    *ngIf="showNotifications"
+    class="absolute right-0 mt-2 w-60 sm:w-80 bg-white rounded-xl shadow-2xl border z-50 flex flex-col max-h-[400px]">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <h3 class="font-bold text-gray-900">Notifications</h3>
+    </div>
+
+    <!-- Liste scrollable -->
+    <div class="flex-1 overflow-y-auto">
+      <div
+        *ngFor="let notification of notifications"
+        class="p-4 border-b border-gray-100 hover:bg-blue-50 cursor-pointer"
+        [ngClass]="{
+          'bg-green-50 border-green-200': !notification.read,
+          'bg-white border-gray-200': notification.read}">
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-xs text-gray-500">{{ notification.time }}</span>
+        </div>
+        <p class="text-sm text-gray-600">{{ notification.message }}</p>
+      </div>
+    </div>
+
+    <!-- Footer fixe -->
+    <div class="p-4 border-t bg-white flex justify-center">
+      <button
+        (click)="markAllAsRead()"
+        class="text-sm text-emerald-600 hover:text-emerald-700 font-semibold">
+        Marquer tout comme lu
+      </button>
+    </div>
+
+  </div>
+</div>

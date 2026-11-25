@@ -1,0 +1,61 @@
+<div *ngIf="!isLoadingData; else loading" class="relative bg-[#DCFCE7] rounded-2xl p-2 h-full w-full">
+  <ng-container *ngIf="badges.length > 0; else noBadges">
+    <div class="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2 border border-gray-200 rounded-2xl shadow-inner">
+      <div *ngFor="let badge of badges"   
+        [ngClass]="{  
+          'p-4 rounded-xl border-2 transition-all': true,
+          'bg-gradient-to-br from-blue-50 to-blue-300 border-blue-200': (badge.progress ?? 0)===100,
+          'bg-gray-50 border-gray-200 opacity-75 pointer-events-none cursor-not-allowed': (badge.progress ?? 0)<100}">
+
+        <!-- Icône ou espaceur vide -->
+        <div class="flex-shrink-0">
+          <ng-container *ngIf="badge.icon; else emptyIcon">
+            <img [src]="'data:image/' + badge.extension + ';base64,' + badge.icon" alt="Icone Badge" class="w-[150px] h-[150px] pb-2" />
+          </ng-container>
+          <ng-template #emptyIcon>
+            <!-- espaceur invisible mais qui prend place -->
+            <div class="w-[150px] h-[150px] pb-2 invisible"></div>
+          </ng-template>
+        </div>
+
+        
+        <h4 class="font-bold mb-2" [ngClass]="{'text-gray-900': (badge.progress ?? 0)===100, 'text-gray-500': (badge.progress ?? 0) <100}">
+          {{ badge.title }}
+        </h4>
+      
+        <p class="text-sm mb-3" [ngClass]="{'text-gray-600': (badge.progress ?? 0)===100, 'text-gray-400': (badge.progress ?? 0)<100}">
+          {{ badge.description }}
+          
+        </p>
+        
+        <div class="text-sm font-semibold mb-3 " [ngClass]="{'text-blue-600': (badge.progress ?? 0)===100, ' text-gray-400': (badge.progress ?? 0) <100}">
+          <p class="text-left">Points requis : {{ badge.goal }} </p>
+          <p class="text-right">+{{ badge.goal }} points</p>
+        </div>
+
+        <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+          <div
+            class="h-2 rounded-full transition-all duration-500"
+            [ngClass]="{'bg-blue-400 ':(badge.progress ?? 0)===100,'bg-gray-300': (badge.progress ?? 0)<100}"
+            [style.width.%]="badge.progress">
+          </div>
+        </div>
+
+        <p class="w-full text-right text-xs" 
+          [ngClass]="{ 'text-blue-600': (badge.progress ?? 0)===100, 'text-gray-400': (badge.progress ?? 0)<100 }">
+          {{ badge.progress | number:'1.1-1' }}%
+        </p>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noBadges>
+    <div class="flex justify-center items-center h-64 bg-white text-gray-500 font-medium">
+      Pas de badge pour l'instant
+    </div>
+  </ng-template>
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

@@ -1,0 +1,462 @@
+
+/* Animations des cercles */
+@keyframes circle-dance {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0) scale(1);
+  }
+  25% {
+    transform: translateX(50px) translateY(-30px) scale(1.1);
+  }
+  50% {
+    transform: translateX(-30px) translateY(40px) scale(0.9);
+  }
+  75% {
+    transform: translateX(20px) translateY(-20px) scale(1.05);
+  }
+}
+
+@keyframes circle-dance-delayed {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translateX(-40px) translateY(50px) scale(1.15) rotate(120deg);
+  }
+  66% {
+    transform: translateX(60px) translateY(-25px) scale(0.85) rotate(240deg);
+  }
+}
+
+@keyframes circle-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-60px) scale(1.2);
+  }
+}
+
+@keyframes circle-bounce {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-40px) translateX(20px);
+  }
+  50% {
+    transform: translateY(-20px) translateX(-15px);
+  }
+  75% {
+    transform: translateY(-50px) translateX(10px);
+  }
+}
+
+@keyframes circle-spiral {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateX(30px) translateY(-30px) rotate(90deg) scale(1.1);
+  }
+  50% {
+    transform: translateX(0) translateY(-60px) rotate(180deg) scale(0.9);
+  }
+  75% {
+    transform: translateX(-30px) translateY(-30px) rotate(270deg) scale(1.05);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(360deg) scale(1);
+  }
+}
+
+/* Animations des formes géométriques */
+@keyframes shape-rotate {
+  0% {
+    transform: rotate(45deg) scale(1);
+  }
+  50% {
+    transform: rotate(225deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(405deg) scale(1);
+  }
+}
+
+@keyframes shape-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.4;
+  }
+}
+
+@keyframes shape-wiggle {
+  0%,
+  100% {
+    transform: rotate(12deg) translateX(0);
+  }
+  25% {
+    transform: rotate(18deg) translateX(10px);
+  }
+  50% {
+    transform: rotate(6deg) translateX(-5px);
+  }
+  75% {
+    transform: rotate(15deg) translateX(8px);
+  }
+}
+
+/* Animations des lignes ondulantes */
+@keyframes lines-flow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes path-draw {
+  0% {
+    stroke-dasharray: 0 1000;
+    opacity: 0;
+  }
+  50% {
+    stroke-dasharray: 500 500;
+    opacity: 1;
+  }
+  100% {
+    stroke-dasharray: 1000 0;
+    opacity: 0.8;
+  }
+}
+
+@keyframes path-draw-delayed {
+  0% {
+    stroke-dasharray: 0 800;
+    opacity: 0;
+  }
+  60% {
+    stroke-dasharray: 400 400;
+    opacity: 0.8;
+  }
+  100% {
+    stroke-dasharray: 800 0;
+    opacity: 0.6;
+  }
+}
+
+@keyframes path-draw-slow {
+  0% {
+    stroke-dasharray: 0 600;
+    opacity: 0;
+  }
+  70% {
+    stroke-dasharray: 300 300;
+    opacity: 0.6;
+  }
+  100% {
+    stroke-dasharray: 600 0;
+    opacity: 0.4;
+  }
+}
+
+/* Animations des particules */
+@keyframes particle-float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-30px) translateX(20px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-15px) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-40px) translateX(10px) rotate(270deg);
+  }
+}
+
+@keyframes particle-float-delayed {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0) scale(1);
+  }
+  33% {
+    transform: translateY(-50px) translateX(-25px) scale(1.2);
+  }
+  66% {
+    transform: translateY(-20px) translateX(30px) scale(0.8);
+  }
+}
+
+@keyframes particle-float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-70px) rotate(180deg);
+  }
+}
+
+@keyframes particle-float-reverse {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(60px) translateX(-40px);
+  }
+}
+
+/* Animations des points lumineux */
+@keyframes light-twinkle {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes light-twinkle-delayed {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(2) rotate(180deg);
+  }
+}
+
+@keyframes light-twinkle-slow {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.8);
+  }
+}
+
+@keyframes light-twinkle-fast {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(2.2);
+  }
+}
+
+/* Animation de respiration globale */
+@keyframes background-breathe {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(1.05);
+  }
+}
+/* Animations existantes conservées */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optimisations responsive */
+@media (max-width: 640px) {
+  .animate-circle-dance,
+  .animate-circle-dance-delayed,
+  .animate-circle-float,
+  .animate-circle-bounce {
+    animation-duration: 6s;
+  }
+}
+
+/* Réduction des animations pour accessibilité */
+
+@keyframes gentle-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-circle-dance,
+  .animate-circle-dance-delayed,
+  .animate-circle-spiral {
+    animation: none;
+  }
+
+  .animate-particle-float,
+  .animate-particle-float-delayed,
+  .animate-particle-float-slow,
+  .animate-particle-float-reverse {
+    animation: gentle-pulse 4s ease-in-out infinite;
+  }
+}
+
+@media (min-width: 900px) and (min-height: 1000px) {
+  .custom-size {
+    max-width: 1100px; 
+    height: 850px;    
+  }
+  .custom-size :not(input)  :not(h1){
+    font-size: 1.9rem;
+  }
+  .espace{
+    height: 10px;
+  }
+  .espace_2{
+    height: 25px;
+  }
+}
+
+/* CLASSES D'ANIMATION */
+.animate-circle-dance {
+  animation: circle-dance 10s ease-in-out infinite;
+}
+
+.animate-circle-dance-delayed {
+  animation: circle-dance-delayed 12s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+.animate-circle-float {
+  animation: circle-float 8s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-circle-bounce {
+  animation: circle-bounce 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-circle-spiral {
+  animation: circle-spiral 16s linear infinite;
+  animation-delay: 4s;
+}
+
+.animate-shape-rotate {
+  animation: shape-rotate 8s linear infinite;
+}
+
+.animate-shape-pulse {
+  animation: shape-pulse 4s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-shape-wiggle {
+  animation: shape-wiggle 3s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-lines-flow {
+  animation: lines-flow 10s ease-in-out infinite;
+}
+
+.animate-path-draw {
+  animation: path-draw 8s ease-in-out infinite;
+}
+
+.animate-path-draw-delayed {
+  animation: path-draw-delayed 10s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-path-draw-slow {
+  animation: path-draw-slow 12s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+.animate-particle-float {
+  animation: particle-float 6s ease-in-out infinite;
+}
+
+.animate-particle-float-delayed {
+  animation: particle-float-delayed 8s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-particle-float-slow {
+  animation: particle-float-slow 10s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+.animate-particle-float-reverse {
+  animation: particle-float-reverse 7s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-light-twinkle {
+  animation: light-twinkle 2s ease-in-out infinite;
+}
+
+.animate-light-twinkle-delayed {
+  animation: light-twinkle-delayed 3s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-light-twinkle-slow {
+  animation: light-twinkle-slow 4s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-light-twinkle-fast {
+  animation: light-twinkle-fast 1.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.animate-background-breathe {
+  animation: background-breathe 12s ease-in-out infinite;
+}
+
+/* Gradient radial pour l'effet de respiration */
+.bg-gradient-radial {
+  background: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px var(--ring-color);
+}
+
+.focus\:ring-emerald-400\/20:focus {
+  --ring-color: rgba(52, 211, 153, 0.2);
+}
+

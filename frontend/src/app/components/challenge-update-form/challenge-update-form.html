@@ -1,0 +1,76 @@
+<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4 sm:p-6">
+  <div class="relative bg-white rounded-xl shadow-xl p-4 sm:p-6 md:p-8 w-full max-w-md sm:max-w-lg">
+
+    <!-- Bouton de fermeture -->
+    <button
+      type="button"
+      (click)="closeForm()"
+      class="absolute top-1 right-1 text-gray-500 hover:text-red-600 text-xl font-bold"
+    >
+      <img src="/assets/x.svg" alt="Fermer" />
+    </button>
+
+    <!-- Titre -->
+    <h2 class="text-lg sm:text-xl font-semibold text-center mb-4 sm:mb-6 text-black">
+      Mettre à Jour le Challenge
+    </h2>
+
+    <!-- Formulaire -->
+    <form [formGroup]="updateChallengeForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
+      <!-- Date de fin -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+        <input
+          type="date"
+          formControlName="endDate"
+          [attr.min]="minDate"
+          class="w-full px-4 py-2 bg-white/5 border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+        />
+        <div *ngIf="updateChallengeForm.errors?.['invalidDate'] && submitClicked" class="text-red-500 text-xs mt-1 text-center">
+          La date de fin doit être aujourd’hui ou une date future.
+        </div>
+      </div>
+      
+      <!-- Icône (upload d'image) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Icône du challenge</label>
+        <input
+          type="file"
+          accept="image/*"
+          formControlName="icon"
+          (change)="onIconFileChange($event)"
+          class="w-full h-11 sm:h-12 px-4 mt-1 bg-white/5 border border-gray-400 rounded-md text-black
+                  file:bg-transparent file:text-black file:border-0 file:py-3 file:rounded-md
+                  file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+        /> 
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Description du challenge</label>
+        <textarea
+          rows="3"
+          placeholder="Entrez la nouvelle description"
+          formControlName="description"
+          class="w-full px-4 py-2 bg-white/5 border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+        ></textarea>
+      </div>
+
+      <div *ngIf="updateChallengeForm.errors?.['noChange'] && submitClicked" class="text-red-500 text-xs mt-1 text-center">
+        Vous devez modifier au moins un champ avant de soumettre.
+      </div>
+      <!-- Bouton -->
+      <button
+        type="submit"
+        [disabled]="(updateChallengeForm.invalid || updateChallengeForm.errors?.['noChange']) && submitClicked"
+        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+      >
+        <span *ngIf="!isLoading">Mettre à Jour</span>
+        <div *ngIf="isLoading" class="flex items-center justify-center">
+          <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+          <span>Mise à jour...</span>
+        </div>
+      </button>
+    </form>
+  </div>
+</div>

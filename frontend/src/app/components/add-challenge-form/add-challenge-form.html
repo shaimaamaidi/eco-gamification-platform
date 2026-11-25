@@ -1,0 +1,146 @@
+<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4 sm:p-6 max-h-full overflow-auto">
+  <div class="relative bg-white rounded-xl shadow-xl p-4 sm:p-6 md:p-8 w-full max-w-lg max-h-[90vh] overflow-auto flex flex-col">
+
+    <!-- Bouton de fermeture -->
+    <button
+      type="button"
+      (click)="closeForm()"
+      class="absolute top-1 right-1 text-gray-500 hover:text-red-600 text-xl font-bold">
+      <img src="/assets/x.svg" alt="Fermer"/>
+    </button>
+
+    <!-- Titre -->
+    <h2 class="text-lg sm:text-xl font-semibold text-center mb-6 text-black">
+      Ajouter un Nouveau Challenge
+    </h2>
+
+    <!-- Formulaire en deux colonnes -->
+    <form [formGroup]="addChallengeForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-grow">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
+
+        <!-- Colonne 1 -->
+        <div class="flex flex-col gap-4">
+          <!-- Titre -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Titre du challenge</label>
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="Ex: Défis Bronze"
+              class="w-full h-11 px-4 bg-white/5 border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all" />
+            <div *ngIf="title?.invalid && (title?.touched || submitClicked)" class="text-red-500 text-xs mt-1">
+              Le titre est requis.
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description du challenge</label>
+            <textarea
+              rows="4"
+              formControlName="description"
+              placeholder="Entrez la description"
+              class="w-full px-4 py-2 bg-white/5 border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"></textarea>
+            <div *ngIf="description?.invalid && (description?.touched || submitClicked)" class="text-red-500 text-xs mt-1">
+              La description est requise.
+            </div>
+          </div>
+
+          <!-- type d'action -->
+          <div>
+            <label for="actionType" class="block text-sm font-medium text-gray-700 mb-1">Type d'action</label>
+            <select id="actionType" formControlName="actionType" class="w-full h-[65%] bg-white/5 border border-gray-400 placeholder:text-gray-400 rounded-md text-black px-4 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200">
+              <option value="" disabled selected>Choisir un type</option>
+              <option value="tri">Tri</option>
+              <option value="plantation">Plantation</option>
+              <option value="nettoyage">Nettoyage</option>
+              <option value="compostage">Compostage</option>
+              <option value="recyclage">Recyclage</option>
+            </select>
+            <div *ngIf="actionType?.invalid && (submitClicked ||actionType?.touched)" class="text-red-500 text-xs mt-1">
+              Veuillez choisir un type d'action.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Colonne 2 -->
+        <div class="flex flex-col gap-4">
+          <!--Actions requis-->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre d'actions requis</label>
+            <input
+              type="number"
+              min="0"
+              formControlName="goal"
+              placeholder="Ex: 10"
+              class="w-full h-11 px-4 bg-white/5 border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all" />
+            <div *ngIf="goal?.invalid && (goal?.touched || submitClicked)" class="text-red-500 text-xs mt-1">
+              Le nombre des actions requis doivent être un nombre positif.
+            </div>
+          </div>
+          <!-- Icône -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Icône du challenge</label>
+            <input
+              type="file"
+              accept="image/*"
+              formControlName="icon"
+              (change)="onIconFileChange($event)"
+              class="w-full h-11 px-4 mt-1 bg-white/5 border border-gray-400 rounded-md text-black 
+                     file:bg-transparent file:text-black file:border-0 file:py-3 file:rounded-md 
+                     file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all" />
+            <div *ngIf="icon?.invalid && submitClicked" class="text-red-500 text-xs mt-1">
+              L’icône est requise.
+            </div>
+          </div>
+
+          <!-- Date de début -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+            <input
+              type="date"
+              formControlName="startDate"
+              [attr.min]="minDate"
+              class="w-full px-4 py-2 bg-white/5 border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+            />
+            <div *ngIf="startDate?.invalid && (startDate?.touched || submitClicked)" class="text-red-500 text-xs mt-1">
+              La date de début doit être aujourd’hui ou une date future.
+            </div>
+          </div>
+
+          <!-- Date de fin -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+            <input
+              type="date"
+              formControlName="endDate"
+              [attr.min]="startDate?.value || minDate"
+              class="w-full px-4 py-2 bg-white/5 border border-gray-400 rounded-md text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+            />
+            <div *ngIf="endDate?.invalid && (endDate?.touched || submitClicked)" class="text-red-500 text-xs mt-1">
+              La date de fin doit être supérieure à la date de début.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bouton centré en bas -->
+      <div class="mt-6 flex justify-center">
+        <button
+          type="submit"
+          [disabled]="addChallengeForm.invalid && submitClicked"
+          class="w-1/2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg px-6 py-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+        >
+          <span *ngIf="!isLoading">Ajouter</span>
+          <div *ngIf="isLoading" class="flex items-center justify-center">
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+            <span>Ajout en cours...</span>
+          </div>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+services:
+  mysqldb:
+    image: mysql:lts
+    container_name: mysql-db-container
+    ports: 
+      - "3308:3306"
+    environment:
+    - MYSQL_DATABASE=${MYSQL_DATABASE}
+    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+    networks:
+      - app-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      retries: 10
+      timeout: 30s
+      start_period: 60s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: springboot-backend-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+    volumes:
+      - ${PROJECT_PATH}/backend/src/main/resources/uploads:/app/src/main/resources/uploads
+      - ${PROJECT_PATH}/backend/src/main/resources/data.sql:/app/src/main/resources/data.sql
+      - maven-repo:/root/.m2
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: angular-frontend-container
+    ports:
+      - "4200:80"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+    
+volumes:
+  maven-repo:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge

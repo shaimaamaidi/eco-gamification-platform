@@ -1,0 +1,223 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- Hero Section -->
+  <section class="relative py-20 px-4 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-green-400/10 via-emerald-400/10 to-teal-400/10"></div>
+
+    <!-- Éléments décoratifs -->
+    <div class="absolute top-20 left-10 w-20 h-20 bg-green-200/30 rounded-full blur-xl animate-pulse"></div>
+    <div class="absolute bottom-20 right-10 w-32 h-32 bg-emerald-200/20 rounded-full blur-2xl animate-bounce"></div>
+
+    <div class="container mx-auto max-w-screen-lg text-center relative z-10 max-w-screen-md">
+      <div class="mb-6 inline-block bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+        🌱 Nouvelle génération d'engagement écologique
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+        Transformez vos gestes écologiques en récompenses
+      </h1>
+
+      <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+        Rejoignez la communauté EcoPoints et participez à la révolution verte ! Déclarez vos actions
+        environnementales, gagnez des points, débloquez des badges et contribuez à un avenir plus durable.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 px-4 bg-white/50">
+    <div class="container mx-auto max-w-screen-lg max-w-screen-lg">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Comment ça fonctionne ?</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Une plateforme simple et ludique pour encourager vos actions écologiques
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div *ngFor="let feature of features; let i = index" 
+             class="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white/80 backdrop-blur-sm rounded-lg p-6 text-center">
+          <div [class]="'w-16 h-16 bg-white mx-auto rounded-full  flex items-center justify-center text-white mb-4 text-2xl'">
+             <img [src]="feature.icon" class="w-9 h-9  object-cover"/>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-4">{{ feature.title }}</h3>
+          <p class="text-gray-600">{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Actions Section -->
+  <section class="py-20 px-4">
+    <div class="container mx-auto max-w-screen-lg max-w-screen-lg">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Actions écologiques récompensées</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Chaque geste compte ! Découvrez les actions que vous pouvez déclarer
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div *ngFor="let action of actions" 
+             class="text-center hover:shadow-lg transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm border-0 rounded-lg p-6">
+          <div class="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xl">
+            {{ action.icon }}
+          </div>
+          <h3 class="font-semibold text-gray-800 mb-2">{{ action.name }}</h3>
+          <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">{{ action.points }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gamification Section -->
+  <section id="gamification" class="py-20 px-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10">
+    <div class="container mx-auto max-w-screen-lg max-w-screen-lg">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Système de gamification</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Points, badges, défis, récompenses : chaque action compte, chaque effort est valorisé !
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Points Card -->
+        <div class="text-center bg-white/80 backdrop-blur-sm border-0 shadow-lg rounded-lg p-6">
+          <div class="w-16 h-16 mx-auto bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white mb-4 text-2xl">
+            ⭐
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Points</h3>
+          <p class="text-gray-600 mb-4">
+            Gagnez des points selon le type et la fréquence de vos actions écologiques
+          </p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600">Actions simples</span>
+              <span class="border border-gray-300 px-2 py-1 rounded text-sm">10-30 pts</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600">Actions complexes</span>
+              <span class="border border-gray-300 px-2 py-1 rounded text-sm">40-45 pts</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges Card -->
+        <div class="text-center bg-white/80 backdrop-blur-sm border-0 shadow-lg rounded-lg p-6">
+          <div class="w-16 h-16 mx-auto bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-white mb-4 text-2xl">
+            🏆
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Badges & Défis</h3>
+          <p class="text-gray-600 mb-4">
+            Débloquez des badges exclusifs et relevez des défis écologiques en atteignant des objectifs d’action ou de points
+          </p>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600">👣 Badge Premier Pas : Effectuez 1 action</span>
+              <span class="text-xs text-gray-500">+10 pts</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600">🎯 Défi Bronze : Effetuer 5 actions de la plantation</span>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Recompenses Card -->
+        <div class="text-center bg-white/80 backdrop-blur-sm border-0 shadow-lg rounded-lg p-6">
+          <div class="w-16 h-16 mx-auto bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full flex items-center justify-center text-white mb-4 text-2xl">
+            🏆
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Récompenses</h3>
+          <p class="text-gray-600 mb-4">Débloquez des récompenses en accumulant des badges</p>
+          <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-3 rounded-lg border-l-4 border-blue-400">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-sm font-semibold text-blue-700">15 badges</span>
+              <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Expert</span>
+            </div>
+            <p class="text-xs text-blue-700">🌍 Certification Ambassadeur Vert</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+   <!-- Badges & Défis Section -->
+  <section id="badges_et_défis" class="py-20 px-4 bg-white/50">
+    <div class="container mx-auto max-w-screen-lg grid gap-10">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Badges & Défis</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Débloquez des badges en accomplissant des actions et relevez des défis pour progresser dans votre parcours écologique.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!--Badges-->
+        <div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Badges Disponibles</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+              *ngFor="let badge of badges"
+              class="bg-gradient-to-r border rounded-lg p-6 hover:shadow-lg transition-all duration-300 hover:scale-105 text-center"
+              [ngClass]="badge.bgColor">
+              <div class="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-2xl shadow-md mb-4">
+                {{ badge.icon }}
+              </div>
+              <h4 class="text-lg font-bold text-gray-800 mb-1">{{ badge.title }}</h4>
+              <p class="text-gray-600 text-sm mb-2">{{ badge.description }}</p>
+              <span class="inline-block px-3 py-1 rounded-full text-sm font-medium"[ngClass]="badge.badgeColor">
+                {{ badge.points }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Défis -->
+        <div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Défis Périodiques</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+          *ngFor="let challenge of challenges"
+          class="flex flex-col items-center text-center bg-gradient-to-r border rounded-lg p-6 hover:shadow-lg transition-all duration-300 hover:scale-105"
+          [ngClass]="challenge.bgColor">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-2xl shadow-md mb-4">
+              {{ challenge.icon }}
+            </div>
+            <h4 class="text-lg font-bold text-gray-800 mb-1">{{ challenge.title }}</h4>
+            <p class="text-gray-600 text-sm mb-2">{{ challenge.description }}</p>
+            <span
+              class="inline-block px-3 py-1 rounded-full text-sm font-medium"
+              [ngClass]="challenge.badgeColor">Défi
+            </span>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- CTA Section -->
+  <section class="py-20 px-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white">
+    <div class="container mx-auto max-w-screen-lg text-center max-w-screen-md">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Prêt à faire la différence ?</h2>
+      <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+        Rejoignez des milliers d'éco-citoyens qui transforment déjà leurs gestes quotidiens en impact positif pour
+        la planète.
+      </p>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-4 justify-center">
+        <button (click)="goToSignUp()" class="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center">
+          Créer mon compte
+          <span class="ml-2">→</span>
+        </button>
+        <button (click)="goToLogin()" class="border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-colors">
+          J'ai déjà un compte
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>

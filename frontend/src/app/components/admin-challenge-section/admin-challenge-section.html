@@ -1,0 +1,114 @@
+<div *ngIf="!isLoadingData; else loading" class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 h-full w-full">
+    <div *ngIf="!isLoadingData" class="bg-white p-2 border border-gray-200 rounded-2xl shadow-inner">
+
+        <!-- Conteneur flex pour bouton à droite -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
+            <!-- Select à gauche -->
+            <select 
+                [(ngModel)]="selectedFilter"
+                (ngModelChange)="updateDisplayedData()"
+                class="border border-emerald-600 rounded px-3 py-1 cursor-pointer text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 transition-all duration-200">
+                <option value="all">Tous</option>
+                <option value="currentChallenge">Défis en cours</option>
+                <option value="expiredChallenge">Défis expirés</option>
+            </select>
+
+            <!-- Bouton à droite -->
+            <button
+                (click)="addChallenge()"
+                class="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-600 transition-colors flex items-center gap-2">
+                <img src="/assets/add.svg" alt="Ajouter" class="w-5 h-5" />
+                Ajouter un défis
+            </button>
+        </div>
+
+        <ng-container *ngIf="challenges.length > 0; else noChallenges">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div *ngFor="let challenge of filteredChallenges"
+                    [ngClass]="{'fade-slide-in':isNewData}"
+                    class="p-4 rounded-xl border-2 transition-all bg-gradient-to-br from-blue-50 to-blue-300 border-blue-400 transition-all duration-200">
+                
+                    <div class="flex  items-center justify-between mb-3 min-w-0">
+                        <!-- Icône ou espaceur vide -->
+                        <div class="flex-shrink-0">
+                            <ng-container *ngIf="challenge.icon; else emptyIcon">
+                            <img [src]="'data:image/' + challenge.extension + ';base64,' + challenge.icon" alt="Icone challenge" class="w-[150px] h-[150px] pb-2"/>
+                            </ng-container>
+                            <ng-template #emptyIcon>
+                            <!-- espaceur invisible mais qui prend place -->
+                            <div class="w-[150px] h-[150px] pb-2 invisible"></div>
+                            </ng-template>
+                        </div>
+                        
+                        <!-- Date restant à droite -->
+                        <div class="flex items-center justify-end text-gray-500 text-xs gap-1 whitespace-nowrap">
+                            <img src="/assets/clock.svg" class="w-3 h-3" />
+                            <p>{{ getDaysBeforeExpiration(challenge.endDate ?? "") }}</p>
+                        </div>
+                    </div>
+
+                
+                    <h4 class="font-bold text-gray-900 mb-2">{{ challenge.title }}</h4>
+                    
+                    <p class="text-gray-600 text-sm mb-4">{{ challenge.description }}</p>
+                    
+                    <div class="text-sm font-semibold mb-3 text-blue-600">
+                        <p class="text-left">Nombre des actions requis : {{ challenge.goal }}</p>
+                    </div>    
+
+                    <!-- Barre de progression -->
+                    <div class="mb-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                                class="h-2 rounded-full transition-all duration-500 bg-blue-400"
+                                [style.width.%]="challenge.progress">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-4">
+                        {{ challenge.progress | number:'1.1-1' }}% des clients ont atteint ce défis
+                    </p>
+                    <div class="flex gap-2">
+                        <button
+                        class="flex-1 bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600 transition-colors"
+                        (click)="updateChallenge(challenge)">
+                        Mettre à jour
+                        </button>
+                        <button
+                        class="flex-1 bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        [disabled]="challenge.progress!==0 && totalClients!==0"
+                        (click)="deleteChallenge(challenge)">
+                        Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #noChallenges>
+            <div class="flex justify-center items-center h-64 bg-white text-gray-500 font-medium">
+                Pas de défis pour l'instant
+            </div>
+        </ng-template>
+        <div *ngIf="filteredChallenges.length === 0 && challenges.length > 0"
+            class="flex items-center justify-center gap-4 bg-white p-4 h-24 text-[rgb(255,0,0)]">
+            <img src="/assets/search-x.svg" class="h-6 w-6" />
+            <p class="text-lg font-semibold">Pas de défi avec le filtre choisi</p>
+        </div>
+    </div>
+    <app-challenge-update-form
+        *ngIf="isSelectedChallenge"
+        [challenge]="selectedChallenge"
+        (close)="closeForm()"
+        (challengeUpdated)="updateChallengeList($event)">
+    </app-challenge-update-form>
+    <app-add-challenge-form
+        *ngIf="isAddingChallenge"
+        (close)="closeForm()"
+        (reloadData)="loadData()">
+    </app-add-challenge-form>
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

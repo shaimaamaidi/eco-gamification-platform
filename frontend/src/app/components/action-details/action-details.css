@@ -1,0 +1,4 @@
+/* Centrer l'overlay et donner un fond transparent noir */
+.fixed.inset-0 {
+  backdrop-filter: blur(4px);
+}

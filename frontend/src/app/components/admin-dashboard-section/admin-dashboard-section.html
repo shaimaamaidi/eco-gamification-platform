@@ -1,0 +1,39 @@
+<div class="grid gap-6">
+  <!-- Cartes des taux -->
+  <div *ngIf="!isLoadingAll" class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-2">
+    
+    <!-- Récompenses -->
+    <div class="p-5 rounded-2xl shadow-lg bg-gradient-to-r from-pink-400 to-pink-500 ">
+      <div class="flex justify-between items-center pb-3">
+        <span class="text-lg font-medium">Taux d'attribution des récompenses</span>
+        <i class="fas fa-gift text-2xl opacity-80"></i>
+      </div>
+      <div class="text-5xl font-light">{{ recompenseRate | number:'1.1-1' }}%</div>
+    </div> 
+ 
+    <!-- Défis -->
+    <div class="p-5 rounded-2xl shadow-lg bg-gradient-to-r from-red-400 to-red-500 text-black">
+      <div class="flex justify-between items-center pb-3">
+        <span class="text-lg font-medium">Taux moyen de réussite des défis</span>
+        <i class="fas fa-trophy text-2xl opacity-80"></i>
+      </div>
+      <div class="text-5xl font-light">{{ challengeRate | number:'1.1-1' }}%</div>
+    </div>
+
+    <!-- Badges -->
+    <div class="p-5 rounded-2xl shadow-lg bg-gradient-to-r from-green-400 to-green-500 text-black">
+      <div class="flex justify-between items-center pb-3">
+        <span class="text-lg font-medium">Taux moyen de réussite des badges</span>
+        <i class="fas fa-medal text-2xl opacity-80"></i>
+      </div>
+      <div class="text-5xl font-light">{{ badgeRate | number:'1.1-1' }}%</div>
+    </div>
+
+  </div>
+
+  <!-- Sections statistiques -->
+  <div class="flex flex-col gap-6"> 
+    <app-client-stats-section [isLoadingAll]="isLoadingAll" (onChildLoaded)="onChildLoaded('client')" (finishChildLoad)="finishChildLoad('client')"></app-client-stats-section>
+    <app-action-stats-section [isLoadingAll]="isLoadingAll" (onChildLoaded)="onChildLoaded('action')" (finishChildLoad)="finishChildLoad('action')"></app-action-stats-section>
+  </div>
+</div>

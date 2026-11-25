@@ -1,0 +1,97 @@
+<div *ngIf="!isLoadingData; else loading" class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 h-full w-full">
+  <div class="bg-white p-2 border border-gray-200 rounded-2xl shadow-inner">
+
+    <!-- Conteneur flex pour bouton à droite -->
+    <div class="flex justify-end mb-2">
+      <button
+        class="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-600 transition-colors flex items-center gap-2"
+        (click)="addBadge()">
+        <img src="/assets/add.svg" alt="Ajouter" class="w-5 h-5" />
+        Ajouter un badge
+      </button>
+    </div>
+    <ng-container *ngIf="badges.length > 0; else noBadges">
+      <!-- Grille des badges -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div *ngFor="let badge of badges" class="p-4 rounded-xl border-2 transition-all bg-gradient-to-br from-blue-50 to-blue-300 border-blue-200">
+
+          <!-- Icône ou espaceur vide -->
+          <div class="flex-shrink-0">
+            <ng-container *ngIf="badge.icon; else emptyIcon">
+              <img [src]="'data:image/' + badge.extension + ';base64,' + badge.icon" alt="Icone Badge" class="w-[150px] h-[150px] pb-2" />
+            </ng-container>
+            <ng-template #emptyIcon>
+              <!-- espaceur invisible mais qui prend place -->
+              <div class="w-[150px] h-[150px] pb-2 invisible"></div>
+            </ng-template>
+          </div>
+        
+          <!-- Titre -->
+          <h4 class="font-bold mb-2 text-gray-900">
+            {{ badge.title }}
+          </h4>
+      
+          <!-- Description -->
+          <p class="text-sm mb-3 text-gray-600">
+            {{ badge.description }}   
+          </p>
+      
+          <!-- Points -->
+          <div class="text-sm font-semibold mb-3 text-blue-600">
+            <p class="text-left">Points requis : {{ badge.goal }}</p>
+            <p class="text-left">Points offerts : +{{ badge.goal }} points</p>
+          </div>    
+
+          <!-- Barre de progression -->
+          <div class="mb-2">
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div
+                class="h-2 rounded-full transition-all duration-500 bg-blue-400"
+                [style.width.%]="badge.progress">
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-600 mb-4">
+            {{ badge.progress | number:'1.1-1' }}% des clients ont débloqué ce badge
+          </p>
+          
+          <!-- Boutons -->
+          <div class="flex gap-2">
+            <button
+              class="flex-1 bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600 transition-colors"
+              (click)="updateBadge(badge)">
+              Mettre à jour
+            </button>
+            <button
+              class="flex-1 bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              (click)="deleteBadge(badge)"
+              [disabled]="badge.progress!==0 && totalClients!==0">
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #noBadges> 
+      <div class="flex justify-center items-center h-64 bg-white text-gray-500 font-medium">
+        Pas de badge pour l'instant
+      </div>
+    </ng-template>
+  </div>
+  <app-badge-update-form
+    *ngIf="isbadgeSelected"
+    [badge]="selectedBdage"
+    (close)="closeForm()"
+    (badgeUpdated)="updateBadgeInList($event)">
+  </app-badge-update-form>
+  <app-add-badge-form
+    *ngIf="isAddingBadgeClicked"
+    (close)="closeForm()"
+    (reloadData)="loadData()">
+  </app-add-badge-form> 
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

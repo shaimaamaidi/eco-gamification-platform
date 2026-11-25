@@ -1,0 +1,26 @@
+<header class="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+        <img src="/assets/logo.png" alt="Logo" class="w-9 h-9" />
+      </div>
+      <span class="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+        EcoPoints
+      </span>
+    </div>
+    <nav class="hidden md:flex items-center space-x-6">
+      <a (click)="scrollToSection('features')" class="text-gray-600 hover:text-green-600 transition-colors cursor-pointer">
+        Fonctionnalités
+      </a>
+      <a (click)="scrollToSection('gamification')" class="text-gray-600 hover:text-green-600 transition-colors cursor-pointer">
+        Gamification
+      </a>
+      <a (click)="scrollToSection('badges_et_défis')" class="text-gray-600 hover:text-green-600 transition-colors cursor-pointer">
+        Badges & Défis
+      </a>
+      <button (click)="goToLogin()" class="border-2 border-green-500 text-green-600 hover:bg-green-50 bg-transparent px-4 py-2 rounded-lg transition-colors">
+        Connexion
+      </button>
+    </nav>
+  </div>
+</header>

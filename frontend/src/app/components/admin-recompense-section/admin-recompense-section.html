@@ -1,0 +1,90 @@
+<div *ngIf="!isLoadingData; else loading" class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 h-full w-full ">
+    <div *ngIf="!isLoadingData" class="bg-white p-2 border border-gray-200 rounded-2xl shadow-inner">
+        <!-- Conteneur flex pour bouton à droite -->
+       <div class="flex justify-end items-center mb-2">
+            <!-- Bouton à droite --> 
+            <button
+                (click)="addRecompense()"
+                class="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-600 transition-colors flex items-center gap-2">
+                <img src="/assets/add.svg" alt="Ajouter" class="w-5 h-5" />
+                Ajouter une récompense
+            </button>
+        </div>
+        <ng-container *ngIf="recompenses.length > 0; else noRecompenses">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div *ngFor="let recompense of recompenses"  class="p-4 rounded-xl border-2 transition-all bg-gradient-to-br from-blue-50 to-blue-300 border-blue-400">
+                    <div class="flex items-center justify-between mb-3"> 
+                        <div class="flex-shrink-0">
+                            <ng-container *ngIf="recompense.icon; else emptyIcon">
+                                <img [src]="'data:image/' + recompense.extension + ';base64,' + recompense.icon" alt="Icone challenge" class="w-[150px] h-[150px] pb-2"/>
+                            </ng-container>
+                            <ng-template #emptyIcon>
+                                <!-- espaceur invisible mais qui prend place -->
+                                <div class="w-[150px] h-[150px] invisible"></div>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold mb-2 ext-gray-900">
+                        {{ recompense.name }}
+                    </h4>
+
+                    <p class="text-sm mb-3 text-gray-600">
+                        {{ recompense.description }}
+                    </p>
+
+                    <div class="text-sm font-semibold mb-3 text-blue-600 ">
+                        <p class="text-left">Badges requis : {{ recompense.requiredBadges }} </p>
+                    </div>
+
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div
+                        class="h-2 rounded-full bg-blue-400 transition-all duration-500"
+                        [style.width.%]="recompense.progress">
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <p class="text-xs text-gray-600 mb-4">
+                            {{ recompense.progress | number:'1.1-1' }}% des clients ont atteint cette récompense
+                        </p>
+                        <div class="flex gap-2">
+                            <button
+                                class="flex-1 bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-blue-600 transition-colors"
+                                (click)="updateRecompense(recompense)">
+                                Mettre à jour
+                            </button>
+                            <button 
+                                class="flex-1 bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                [disabled]="recompense.progress!==0 && totalClients !==0"
+                                (click)="deleteRecompense(recompense)">
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #noRecompenses>
+            <div class="flex justify-center items-center h-64 bg-white text-gray-500 font-medium">
+                Pas de récompense pour l'instant
+            </div>
+        </ng-template>
+    </div>
+    <app-add-recompense-form
+    *ngIf="isAddingRecompense"
+    (close)="closeForm()"
+    (reloadData)="loadData()">
+    </app-add-recompense-form>
+    <app-recompense-update-form
+    *ngIf="isSelectedRecompense"
+    [recompense]="selectedRecompense"
+    (close)="closeForm()"
+    (updateRecompense)="updateRecompenseList($event)">
+    </app-recompense-update-form>
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

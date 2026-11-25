@@ -1,0 +1,122 @@
+<div *ngIf="!isLoadingData; else loading" class="grid space-y-2 pb-6 dashboard-section-width">
+
+    <!-- Cartes des taux -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4 pb-4 gap-2">
+        <div *ngFor="let card of statsCards"
+            [ngClass]="['bg-gradient-to-br', card.color]"
+            class="w-full rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow flex flex-col items-center justify-center text-center">
+            <div class="flex items-center justify-between mb-4">
+                <div class="rounded-xl">
+                    <img [src]="card.icon" class="w-7 h-7"/>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-white/90 text-sm font-medium mb-1">{{ card.title }}</h3>
+                <p class="text-3xl font-bold text-white/90 mb-1">{{ card.value | number}}</p>
+            </div>
+        </div>
+    </div>
+    <!--ActionStats-->
+    <div class="bg-white rounded-2xl p-4 gap-6 m-2 shadow-lg scrollable-wrapper" >
+        <!-- Titre -->
+        <div class="flex items-center mb-6 chart-wrapper">
+            <svg
+                class="text-emerald-600 mr-3"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M3 3v18h18"></path>
+                <path d="M18 17V9"></path>
+                <path d="M13 17V5"></path>
+                <path d="M8 17v-3"></path>
+            </svg>
+            <h2 class="text-xl font-bold text-gray-900">Actions par jour</h2>
+        </div>
+        <div class="overflow-x-auto p-2 bg-white" >
+            <div style="max-width: 700px;">
+                <ngx-charts-line-chart
+                [results]="results"
+                [legend]="true"
+                [xAxis]="true"
+                [yAxis]="true"
+                [showXAxisLabel]="false"
+                [showYAxisLabel]="false"
+                [view]="[1020, 300]"
+                [tooltipDisabled]="false"
+                [animations]="true"
+                [yScaleMin]="0" 
+                [autoScale]="false"
+                [yScaleMax]="yMaxValue"
+                [curve]="curve">
+                </ngx-charts-line-chart>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-white rounded-lg shadow p-4 gap-4 m-2 shadow-lg h-full">
+        <header class="flex items-center justify-between mb-4">
+            <h3 class="flex items-center gap-2 text-xl font-semibold">
+                <img src="/assets/people.svg" class="h-5 w-5 text-primary" />
+                Classement
+            </h3>
+        </header>
+
+        <div class="relative w-full flex gap-4 grid grid-rows-2 transition-all duration-300 ease-in-out"
+            [ngClass]="(rankingType === 'by_Action') ? 'h-20' : 'h-12'">
+            <div>
+                <select
+                class="border border-emerald-600 rounded px-3 py-1 cursor-pointer text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 transition-all duration-200"
+                [value]="rankingType"
+                (change)="onRankingTypeChange($event)">
+                <option value="global" class="bg-white text-black">Global</option>
+                <option value="by_Action" class="bg-white text-black">Par Action</option>
+                <option value="by_City" class="bg-white text-black">Par Ville</option>
+                </select>
+            </div>
+
+            <!-- Select action type -->
+            <div class="flex flex-col">
+                <select
+                *ngIf="rankingType === 'by_Action'"
+                class=" w-64 border border-emerald-600 rounded px-3 py-1 cursor-pointer text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 transition-all duration-200"
+                [(ngModel)]="selectedActionType"
+                (ngModelChange)="updateDisplayedData()"> 
+                    <option value="tous" class="bg-white text-black">Tous</option>
+                    <option value="tri" class="bg-white text-black">Tri</option>
+                    <option value="recyclage" class="bg-white text-black">Recyclage</option>
+                    <option value="compostage" class="bg-white text-black">Compostage</option>
+                    <option value="nettoyage" class="bg-white text-black">Nettoyage</option>
+                    <option value="plantation" class="bg-white text-black">Plantation</option>
+                </select>
+            </div>
+        </div>
+        <ng-container *ngIf="displayedRankings.length > 0; else noClassements">
+            <!-- Liste -->
+            <div  class="card p-4 h-full">
+                <div #scrollContainer class="overflow-auto max-h-80 pr-4">
+                    <div class="grid gap-2">
+                        <app-ranking-item
+                            *ngFor="let client of displayedRankings"
+                            [client]="client"
+                            [isCurrentUser]="client.name === currentClient.userName"
+                            #rankingItems>
+                        </app-ranking-item>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #noClassements>
+            <div class="flex justify-center items-center h-64 bg-white text-gray-500 font-medium">
+                Pas de client avec le filtre choisi
+            </div>
+        </ng-template>
+    </div>
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 

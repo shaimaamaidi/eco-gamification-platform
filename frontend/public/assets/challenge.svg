@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target-icon lucide-target" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="color-0" bx:pinned="true" gradientUnits="userSpaceOnUse">
+      <stop style="stop-color: #d8d8d8;"/>
+    </linearGradient>
+  </defs>
+  <circle cx="12" cy="12" r="10" style="stroke: url(&quot;#color-0&quot;);"/>
+  <circle cx="12" cy="12" r="6" style="stroke: url(&quot;#color-0&quot;);"/>
+  <circle cx="12" cy="12" r="2" style="stroke: url(&quot;#color-0&quot;);"/>
+</svg>

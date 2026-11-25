@@ -1,0 +1,148 @@
+<div *ngIf="!isLoadingData; else loading" class="relative p-2 pl-4 h-full w-full flex flex-col gap-4">
+
+    <div class="bg-white p-2 border border-gray-200 rounded-2xl shadow-inner">
+
+        <!-- Conteneur des selects + bouton -->
+        <div class="overflow-y-auto p-2 pl-5 pt-5 h-auto z-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+        <!-- Bloc des selects -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+
+            <!-- Premier select -->
+            <select
+            [(ngModel)]="selectedFilter"
+            (ngModelChange)="updateDisplayedData()"
+            class="border border-emerald-600 rounded px-3 py-2 cursor-pointer 
+                    text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 
+                    transition-all duration-200 w-full sm:w-auto">
+            <option value="global" class="bg-white text-black">Global</option>
+            <option value="byAction" class="bg-white text-black">Par type d'action</option>
+            <option value="byStatus" class="bg-white text-black">Par statut d'action</option>
+            </select>
+
+            <!-- Deuxième select si filtre = byAction -->
+            <select
+            *ngIf="selectedFilter === 'byAction'"
+            [(ngModel)]="selectedActionType"
+            (ngModelChange)="updateDisplayedData()"
+            class="fade-in border border-emerald-600 rounded px-3 py-2 cursor-pointer 
+                    text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 
+                    transition-all duration-200 w-full sm:w-auto">
+            <option value="tous" class="bg-white text-black">Tous les types</option>
+            <option value="tri" class="bg-white text-black">Tri</option>
+            <option value="compostage" class="bg-white text-black">Compostage</option>
+            <option value="nettoyage" class="bg-white text-black">Nettoyage</option>
+            <option value="plantation" class="bg-white text-black">Plantation</option>
+            <option value="recyclage" class="bg-white text-black">Recyclage</option>
+            </select>
+
+            <!-- Deuxième select si filtre = byStatus -->
+            <select
+            *ngIf="selectedFilter === 'byStatus'"
+            [(ngModel)]="selectedStatus"
+            (ngModelChange)="updateDisplayedData()"
+            class="fade-in border border-emerald-600 rounded px-3 py-2 cursor-pointer 
+                    text-emerald-600 bg-emerald-600/10 hover:border-emerald-600 
+                    transition-all duration-200 w-full sm:w-auto">
+            <option value="tous" class="bg-white text-black">Tous les statuts</option>
+            <option value="rejected" class="bg-white text-black">Refusé</option>
+            <option value="accepted" class="bg-white text-black">Accepté</option>
+            <option value="waiting" class="bg-white text-black">En attente</option>
+            </select>
+        </div>
+
+        <!-- Bouton d'ajout -->
+        <button *ngIf="!isAdmin"
+            (click)="openForm()"
+            class="bg-emerald-500 text-white px-4 py-2 rounded-lg shadow 
+                hover:bg-emerald-600 transition-colors flex items-center gap-2 
+                justify-center sm:justify-start w-full sm:w-auto">
+            <img src="/assets/add.svg" alt="Ajouter" class="w-5 h-5" />
+            Ajouter une action
+        </button>
+    </div>
+
+    <!-- Liste d’actions -->
+    <ng-container *ngIf="actionData.length > 0; else noActions">
+      <div *ngIf="filetredData.length>0"
+           class="overflow-y-auto p-2 m-2 gap-6 z-0 border border-gray-200 rounded-xl 
+                  transition-all animation-200"
+           [ngClass]="{'fade-slide-in':isNewData}">
+        
+        <div *ngFor="let action of filetredData"
+             (click)="onSelectAction(action)"
+             class="cursor-pointer flex flex-col sm:flex-row items-start sm:items-center 
+                    p-4 mb-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors 
+                    border border-gray-200 gap-3 sm:gap-4">
+          
+          <!-- Icône -->
+          <div class="flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-sm">
+            <img [src]="getIconClass(action.type ?? '')" class="w-5 h-5"/>
+          </div>
+
+          <!-- Infos -->
+          <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4 w-full">
+            
+            <div class="flex items-center">
+              <p class="text-gray-500 text-sm capitalize">{{ action.type ?? '' }}</p>
+            </div>
+
+            <div class="flex items-center">
+              <span class="px-3 py-1 rounded-full text-sm font-medium"
+                    [ngClass]="getStatusClass(action.status ?? '')">
+                {{ action.status ?? '' }}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-1 md:text-right">
+              <p *ngIf="action.status?.toLowerCase()==='rejected'" 
+                 class="font-bold text-red-800">
+                 {{ action.awardPoints ?? 0}} pts
+              </p>
+              <p *ngIf="action.status?.toLowerCase()!=='rejected'" 
+                 class="font-bold text-emerald-600">
+                 +{{ action.awardPoints ?? 0}} pts
+              </p>
+              <p class="text-gray-500 text-sm">{{ action.date }}</p>
+            </div>
+          </div>
+        </div>  
+      </div>
+    </ng-container>
+
+    <!-- Autres états inchangés -->
+    <ng-template #noActions>
+      <div [ngClass]="{'fade-slide-in':isNewData}" 
+           class="flex justify-center items-center h-64 bg-white rounded-2xl 
+                  shadow-lg text-gray-500 font-medium transition-all animation-200">
+        Pas d'action pour l'instant
+      </div>
+    </ng-template>
+
+        <div *ngIf="filetredData.length === 0 && actionData.length > 0"
+            [ngClass]="{'fade-slide-in':isNewData}"
+            class="flex items-center justify-center gap-4 bg-white p-4 h-24 text-[rgb(255,0,0)] transition-all animation-200">
+            <img src="/assets/search-x.svg" class="h-6 w-6" />
+            <p class="text-lg font-semibold">Pas d'action avec le filtre choisi</p>
+        </div>
+    </div>
+    <!-- Détails -->
+    <app-action-details
+      *ngIf="selectedAction"
+      [action]="selectedAction"
+      (close)="onCloseDetails()"
+      [isAdmin]="isAdmin"
+      (reloadData)="loadData()">
+    </app-action-details>
+    <!--form d'ajout-->
+    <app-add-action-form
+        *ngIf="showForm && !isAdmin"
+        (close)="closeForm()"
+        (reloadData)="loadData()">
+    </app-add-action-form>
+</div>
+<ng-template #loading>
+    <div class="relative bg-[#DCFCE7] rounded-2xl p-2 gap-4 min-h-[300px] mt-10 pt-10">
+        <app-loading-dots></app-loading-dots>
+    </div>
+</ng-template> 
