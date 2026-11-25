@@ -12,9 +12,10 @@ Une plateforme web complète et moderne conçue pour encourager les actions éco
 - **Tableau de bord personnalisé** : Suivez vos statistiques et votre impact écologique
 
 ### 🔐 Gestion Sécurisée des Comptes
+- **Authentification JWT** : Système d'authentification sécurisé basé sur JSON Web Tokens pour protéger les accès et maintenir les sessions utilisateur
 - **Vérification d'email obligatoire** : Système de confirmation par email lors de la création de compte pour garantir la sécurité
 - **Réinitialisation de mot de passe** : Fonctionnalité complète de récupération de compte via email en cas d'oubli
-- **Authentification sécurisée** : Protection des données et des accès utilisateurs
+- **Protection des routes** : Guards Angular pour sécuriser l'accès aux pages selon les rôles utilisateur
 
 ### 📱 Design Responsive
 L'application est **entièrement responsive** et optimisée pour tous les appareils :
@@ -25,7 +26,8 @@ L'application est **entièrement responsive** et optimisée pour tous les appare
 L'interface s'adapte automatiquement à la taille de votre écran pour une expérience utilisateur optimale sur tous les supports.
 
 ### 🔔 Système de Notifications & Feedback Utilisateur
-- **Notifications backend en temps réel** : Système de notifications côté serveur pour les événements importants
+- **WebSocket pour notifications en temps réel** : Communication bidirectionnelle instantanée via STOMP/SockJS pour recevoir des notifications push sans rafraîchissement de page
+- **Notifications backend persistantes** : Système de notifications côté serveur pour les événements importants (nouveaux badges, défis complétés, récompenses débloquées)
 - **Feedback visuel élégant** : Alertes toast avec **Ngx-toastr** pour informer l'utilisateur du succès/échec des opérations (création, modification, suppression)
 - **Confirmations interactives** : Dialogues modaux avec **SweetAlert2** pour confirmer les actions critiques avant leur exécution
 
@@ -33,13 +35,13 @@ L'interface s'adapte automatiquement à la taille de votre écran pour une expé
 - Statistiques détaillées et tableaux de bord analytics
 - Gestion complète des utilisateurs, badges, défis et récompenses
 - Modération des actions déclarées
-- Consultation du profile
+- Consultation du profil
 
-### 👨‍💼 Interface d'utilisateur
+### 👤 Interface Utilisateur
 - Statistiques détaillées et tableaux de bord analytics
-- Déclaration des actions déclarées
+- Déclaration des actions écologiques
 - Consultation badges, défis et récompenses
-- Consultation du profile
+- Consultation du profil
 
 ---
 
@@ -114,13 +116,17 @@ L'interface s'adapte automatiquement à la taille de votre écran pour une expé
 - **Gestion des dépendances** : Maven
 - **Persistance** : Spring Data JPA
 - **Base de données** : MySQL (compatible avec PostgreSQL et autres)
-- **Documentation API** : OpenAPI 3.0 / Swagger UI
+- **Sécurité** : Spring Security avec JWT (JSON Web Tokens) pour l'authentification stateless
+- **WebSocket** : Spring WebSocket avec STOMP pour les notifications en temps réel
+- **Documentation API** : OpenAPI 3.0 / Swagger UI pour documentation interactive et génération de clients
 - **Email** : Spring Mail avec support SMTP
 
 ### Frontend
 - **Framework** : Angular 20
 - **Langage** : TypeScript
 - **Styling** : Tailwind CSS
+- **WebSocket Client** : SockJS et STOMP.js pour communication temps réel avec le backend
+- **Génération de clients API** : ng-openapi-gen pour générer automatiquement les services TypeScript depuis le schéma OpenAPI
 - **Notifications** : Ngx-toastr (toast notifications élégantes)
 - **Modales** : SweetAlert2 (dialogues interactifs)
 - **Build** : Angular CLI avec optimisation production
@@ -200,6 +206,11 @@ MYSQL_ROOT_PASSWORD=votre_mot_de_passe_securise
 SPRING_MAIL_USERNAME=votre-email@gmail.com
 SPRING_MAIL_PASSWORD=votre-mot-de-passe-application
 
+# JWT (optionnel - valeurs par défaut fournies)
+JWT_SECRET=votre_secret_jwt_securise
+JWT_EXPIRATION=1800000
+JWT_REFRESH_TOKEN_EXPIRATION=86400000
+
 # Chemin du projet
 PROJECT_PATH=/chemin/vers/le/projet
 ```
@@ -220,6 +231,7 @@ Une fois les conteneurs démarrés, accédez aux différents services :
 - **Frontend (Application)** : http://localhost:4200
 - **Backend API** : http://localhost:8080
 - **Documentation API (Swagger)** : http://localhost:8080/swagger-ui.html
+- **WebSocket Endpoint** : ws://localhost:8080/ws (automatiquement géré par l'application)
 
 #### Commandes Utiles
 
@@ -345,6 +357,11 @@ SPRING_DATASOURCE_PASSWORD=MotDePasseSecurise123!
 SPRING_MAIL_USERNAME=votre-email@gmail.com
 SPRING_MAIL_PASSWORD=xxxx-xxxx-xxxx-xxxx
 
+# === Configuration JWT ===
+JWT_SECRET=VotreCleSecreteTresLongueEtSecurisee123456789
+JWT_EXPIRATION=1800000
+JWT_REFRESH_TOKEN_EXPIRATION=86400000
+
 # === Autres ===
 PROJECT_PATH=/chemin/vers/eco-gamification-platform
 ```
@@ -368,12 +385,18 @@ Pour utiliser Gmail avec l'application :
 
 L'API REST est entièrement documentée avec **OpenAPI 3.0** et **Swagger UI**.
 
-### Accéder à la Documentation
+### Accéder à la Documentation Interactive
 
 Après avoir démarré le backend, rendez-vous sur :
 ```
 http://localhost:8080/swagger-ui.html
 ```
+
+Swagger UI vous permet de :
+- 📖 Consulter tous les endpoints disponibles
+- 🧪 Tester les API directement depuis le navigateur
+- 📝 Voir les modèles de données et schémas
+- 🔐 Tester avec authentification JWT
 
 ### Fichier OpenAPI
 
@@ -382,9 +405,45 @@ Le schéma OpenAPI complet est disponible dans :
 frontend/src/openapi/openapi.json
 ```
 
+### Génération Automatique des Clients API
+
+Le projet utilise **ng-openapi-gen** pour générer automatiquement les services TypeScript depuis la spécification OpenAPI :
+
+```bash
+# Depuis le dossier frontend
+npm run api-gen
+
+# Cela génère les services dans src/openapi/generated/
+```
+
+**Avantages** :
+- ✅ Types TypeScript fortement typés
+- ✅ Synchronisation automatique avec le backend
+- ✅ Réduction des erreurs de développement
+- ✅ Autocomplétion IDE complète
+
 ---
 
-## 🔐 Authentification et Accès
+## 🔐 Authentification et Sécurité
+
+### Architecture de Sécurité JWT
+
+L'application utilise **JSON Web Tokens (JWT)** pour une authentification stateless et sécurisée :
+
+**Flux d'authentification** :
+1. L'utilisateur se connecte avec email/mot de passe
+2. Le backend génère un JWT signé contenant l'ID utilisateur et le rôle
+3. Le token est stocké côté client (localStorage)
+4. Chaque requête HTTP inclut le token dans l'en-tête `Authorization: Bearer <token>`
+5. Le backend valide le token et autorise l'accès aux ressources protégées
+
+**Sécurité** :
+- Tokens signés avec secret cryptographique
+- Double expiration : Access Token (30 min) et Refresh Token (24h)
+- Renouvellement automatique des tokens via Refresh Token
+- Protection CSRF grâce à l'architecture stateless
+- Guards Angular pour protéger les routes frontend
+- Intercepteurs HTTP pour injection automatique des tokens
 
 ### Compte Administrateur
 
@@ -404,7 +463,7 @@ Pour créer un compte utilisateur :
 2. **Formulaire** : Remplissez vos informations (nom, prénom, email, ville, mot de passe)
 3. **Email de vérification** : Un email vous sera envoyé automatiquement
 4. **Confirmation** : Cliquez sur le lien dans l'email pour activer votre compte
-5. **Connexion** : Connectez-vous avec vos identifiants
+5. **Connexion** : Connectez-vous avec vos identifiants et recevez votre JWT
 
 ### Fonctionnalités Email
 
@@ -422,29 +481,38 @@ Pour créer un compte utilisateur :
 
 ---
 
+## 🔔 Système de Notifications en Temps Réel
+
+### Architecture WebSocket
+
+L'application utilise **WebSocket** avec le protocole **STOMP** (Simple Text Oriented Messaging Protocol) sur **SockJS** pour les notifications push en temps réel.
+
+**Fonctionnement** :
+1. Le client établit une connexion WebSocket persistante au démarrage
+2. Le client s'abonne aux topics de notifications 
+3. Le backend envoie des notifications instantanément via WebSocket
+4. Les notifications apparaissent en temps réel sans rafraîchissement de page
+
+**Technologies** :
+- **Backend** : Spring WebSocket + STOMP
+- **Frontend** : SockJS-client + STOMP.js
+- **Transport** : WebSocket avec fallback HTTP long-polling
+
+**Types de notifications** :
+- 🏆 Nouveau badge débloqué
+- ✅ Défi complété
+- 🎁 Récompense obtenue
+- ⭐ Nouveau niveau atteint
+- 📊 Mise à jour du classement
+
+---
+
 ## 👥 Auteur
 
 **Amaidi Chaima**
 - 📧 Email : [amaidi.shaima@gmail.com](mailto:amaidi.shaima@gmail.com)
 - 🔗 GitHub : [@shaimaamaidi](https://github.com/shaimaamaidi)
 - 📅 Année : 2024-2025
-
----
-
-## 📚 Ressources et Documentation
-
-### Documentation Officielle
-- [Spring Boot](https://spring.io/projects/spring-boot) - Framework backend
-- [Angular](https://angular.io/docs) - Framework frontend
-- [Tailwind CSS](https://tailwindcss.com/docs) - Framework CSS
-- [Docker](https://docs.docker.com/) - Conteneurisation
-- [MySQL](https://dev.mysql.com/doc/) - Base de données
-
-### Guides Utiles
-- [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
-- [Angular Routing](https://angular.io/guide/router)
-- [Tailwind Responsive Design](https://tailwindcss.com/docs/responsive-design)
-- [Docker Compose](https://docs.docker.com/compose/)
 
 ---
 
@@ -457,8 +525,6 @@ Pour créer un compte utilisateur :
 **Solution** : Vérifiez votre configuration SMTP dans fichier .env et que vous utilisez un mot de passe d'application (pas votre mot de passe Gmail).
 
 ---
-
-
 
 ⭐ **Si ce projet vous est utile, n'oubliez pas de lui donner une étoile sur GitHub !**
 
